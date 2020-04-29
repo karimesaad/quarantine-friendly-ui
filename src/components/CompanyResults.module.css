@@ -1,0 +1,11 @@
+.root {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 52px auto;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: auto 52px 52px 52px;
+  grid-template-rows: auto;
+}

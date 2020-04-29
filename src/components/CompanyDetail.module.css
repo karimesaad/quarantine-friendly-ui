@@ -1,0 +1,25 @@
+.root {
+  display: grid;
+  padding: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto;
+}
+
+.left {
+  display: grid;
+  justify-items: start;
+}
+.right {
+  display: grid;
+  justify-items: end;
+}
+
+.icons {
+  align-content: start;
+  justify-content: end;
+}
+
+.today {
+  display: grid;
+  align-items: end;
+}

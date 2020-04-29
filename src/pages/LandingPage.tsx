@@ -1,39 +1,71 @@
-import React, {FC} from 'react';
-import { SSL_OP_CRYPTOPRO_TLSEXT_BUG } from 'constants';
+import React, { FC, useState } from "react";
+import { Select, Option } from "baseui/select";
+import { Input } from "baseui/input";
+import { Button } from "baseui/button";
 
-// export const LandingPage: FC = () => {
-//     return (
+interface LandingPageProps {
+  onSubmit: (obj: { zipcode: string; radius: number }) => void;
+}
 
-//     )
-// }
+const radiusOptions: Option[] = [
+  { label: "5 Miles", id: "0" },
+  { label: "10 Miles", id: "1" },
+  { label: "15 Miles", id: "2" },
+  { label: "20 Miles", id: "3" },
+];
 
-// const searchCompanies = async (
-//     zip, 
-//     {
-//         distance = 10, 
-//         businesses = ['coffee'],
-//         includeDistance = true
-//     }
-// )
+const radiusMiles: Record<string, number> = {
+  "0": 5,
+  "1": 10,
+  "2": 15,
+  "3": 20,
+};
 
-// const companies = searchCompanies('55402', {distance: 10, businesses: ['coffee'], includeDistance: true})
+const LandingPage: FC<LandingPageProps> = ({ onSubmit }) => {
+  const [zipcode, setZipcode] = useState<string>("");
+  const [radiusOption, setRadiusOption] = useState<Option>();
 
+  return (
+    <div
+      style={{
+        height: "100vh",
+        width: "100vw",
+        display: "grid",
+        placeItems: "center",
+      }}
+    >
+      <div style={{ width: "75%", maxWidth: 400 }}>
+        <div style={{ padding: "12px 0" }}>
+          <Input
+            value={zipcode}
+            onChange={(e) => setZipcode(e.currentTarget.value)}
+            placeholder="Zipcode"
+          />
+        </div>
+        <div style={{ padding: "12px 0" }}>
+          <Select
+            options={radiusOptions}
+            value={radiusOption !== undefined ? [radiusOption] : []}
+            placeholder="Radius"
+            onChange={(e) => setRadiusOption(e.option as Option)}
+          />
+        </div>
+        <div style={{ padding: "12px 0" }}>
+          <Button
+            disabled={zipcode.length < 5 || radiusOption === undefined}
+            onClick={(e) =>
+              onSubmit({
+                zipcode: zipcode as string,
+                radius: radiusMiles[radiusOption?.id as string],
+              })
+            }
+          >
+            <span>---></span>
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-
-//when button is clicked:
-//  1. fill in query params (zipcode, distance, business) and reroute: if valid params -> company listing page, else -> stay in landing page)
-//  2. get latitude and longitude from entered zip code (api call?)
-//  3. use this code https://levelup.gitconnected.com/nearby-location-queries-with-cloud-firestore-e7f4a2f18f9d and obtian from firebase list of companies in entered distance
-//  4. from list of companies obtained, get latitude and longitude and call https://developers.google.com/maps/documentation/distance-matrix/ to obtain distances from entered zipcode 
-//  5. Sort list of companies 
-
-
-//for each company, save: latitude, longitud, geohash
-
-//?zip=55402&businesses=coffee&distance=10
-
-//For map:
-//  can we set a max zoom out?  only allow zoom in/zoom out
-//  in top right corner, allow user to change zip code + beer/coffee + distance 
-
-
+export default LandingPage;

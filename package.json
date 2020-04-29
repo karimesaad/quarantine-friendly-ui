@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.9.12",
+    "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -19,6 +21,7 @@
     "firebase": "^7.14.2",
     "geofirestore": "^3.4.1",
     "mapbox-gl": "^1.8.1",
+    "query-string": "^6.12.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-mapbox-gl": "^4.8.3",
@@ -26,7 +29,8 @@
     "react-scripts": "3.4.1",
     "styletron-engine-atomic": "^1.4.6",
     "styletron-react": "^5.2.7",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "use-query-params": "^1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -35,15 +35,117 @@ const firestore = firebase.firestore();
 const geofirestore: GeoFirestore = new GeoFirestore(firestore);
 
 // Create a GeoCollection reference
-const geocollection: GeoCollectionReference = geofirestore.collection("items");
+const geocollection: GeoCollectionReference = geofirestore.collection(
+  "companies"
+);
 
-// Add a GeoDocument to a GeoCollection
+//Add a GeoDocument to a GeoCollection
 //lat: 44.97592, lng: -93.27223
 // geocollection.add({
 //   name: "northloop",
 //   // The coordinates field must be a GeoPoint!
 //   coordinates: new firebase.firestore.GeoPoint(44.97592, -93.27223),
 // });
+
+interface AddCompanyProps {
+  name: string;
+  address: string;
+  zipcode: string;
+  city: string;
+  state: string;
+  latitude: number;
+  longitude: number;
+  phoneNumber: string;
+  website: string;
+  pickup: boolean;
+  delivery: boolean;
+  socialMedia: {
+    facebook: string;
+    instagram: string;
+  };
+  // hours: {
+  //   monday: {
+  //     startHour: string;
+  //     endHour: string;
+  //   };
+  //   tuesday: {
+  //     startHour: string;
+  //     endHour: string;
+  //   };
+  //   wednesday: {
+  //     startHour: string;
+  //     endHour: string;
+  //   };
+  //   thursday: {
+  //     startHour: string;
+  //     endHour: string;
+  //   };
+  //   friday: {
+  //     startHour: string;
+  //     endHour: string;
+  //   };
+  //   saturday: {
+  //     startHour: string;
+  //     endHour: string;
+  //   };
+  //   sunday: {
+  //     startHour: string;
+  //     endHour: string;
+  //   };
+  // };
+}
+
+export const addCompany = (props: AddCompanyProps) => {
+  geocollection.add({
+    name: props.name,
+    address: props.address,
+    zipcode: props.zipcode,
+    city: "Minneapolis",
+    state: "Minnesota",
+    phoneNumber: props.phoneNumber,
+    website: props.website,
+    pickup: props.pickup,
+    delivery: props.delivery,
+    socialMedia: {
+      facebook: props.socialMedia.facebook,
+      instagram: props.socialMedia.instagram,
+    },
+    // hours: {
+    //   monday: {
+    //     startHour: props.hours.monday.startHour,
+    //     endHour: props.hours.monday.endHour,
+    //   },
+    //   tuesday: {
+    //     startHour: props.hours.tuesday.startHour,
+    //     endHour: props.hours.tuesday.endHour,
+    //   },
+    //   wednesday: {
+    //     startHour: props.hours.wednesday.startHour,
+    //     endHour: props.hours.wednesday.endHour,
+    //   },
+    //   thursday: {
+    //     startHour: props.hours.thursday.startHour,
+    //     endHour: props.hours.thursday.endHour,
+    //   },
+    //   friday: {
+    //     startHour: props.hours.friday.startHour,
+    //     endHour: props.hours.friday.endHour,
+    //   },
+    //   saturday: {
+    //     startHour: props.hours.saturday.startHour,
+    //     endHour: props.hours.saturday.endHour,
+    //   },
+    //   sunday: {
+    //     startHour: props.hours.sunday.startHour,
+    //     endHour: props.hours.sunday.endHour,
+    //   },
+    // },
+    coordinates: new firebase.firestore.GeoPoint(
+      props.latitude,
+      props.longitude
+    ),
+  });
+};
 
 interface Coordinates {
   lat: number;
@@ -53,29 +155,42 @@ interface Coordinates {
 export interface Company {
   id: string;
   name: string;
+  address: string;
+  zipcode: string;
+  city: string;
+  state: string;
+  latitude: number;
+  longitude: number;
+  phoneNumber: string;
+  website: string;
+  pickup: boolean;
+  delivery: boolean;
+  socialMedia: {
+    facebook: string;
+    instagram: string;
+  };
   coordinates: Coordinates;
 }
 
 export interface CompanyDistance {
   company: Company;
-  distanceKm: number;
+  distance: number;
 }
 
 // Create a GeoQuery based on a location
 export const getCompanyDistances = async (
   coordinates: Coordinates,
-  radiusKm: number
+  radius: number //radius in Miles
 ): Promise<CompanyDistance[]> => {
   const query = geocollection.near({
     center: new firebase.firestore.GeoPoint(coordinates.lat, coordinates.lng),
-    radius: radiusKm,
+    radius: convertMiToKm(radius),
   });
   const response = await query.get(); // list of ids with distances
-  console.log(response);
 
   const companyDistanceMap: Record<string, number> = {};
   response.docs.forEach((doc) => {
-    companyDistanceMap[doc.id] = doc.distance;
+    companyDistanceMap[doc.id] = Number(convertKmToMi(doc.distance).toFixed(3));
   });
 
   const companies = await getCompaniesById(Object.keys(companyDistanceMap));
@@ -84,18 +199,26 @@ export const getCompanyDistances = async (
   companies.forEach((company) => {
     companyDistances.push({
       company: company,
-      distanceKm: companyDistanceMap[company.id],
+      distance: companyDistanceMap[company.id],
     });
   });
-  return companyDistances.sort((a, b) => a.distanceKm - b.distanceKm);
+  return companyDistances.sort((a, b) => a.distance - b.distance);
+};
+
+const convertMiToKm = (miles: number) => {
+  return miles * 1.609;
+};
+
+const convertKmToMi = (km: number) => {
+  return km / 1.609;
 };
 
 export const getCompaniesById = async (ids: string[]): Promise<Company[]> => {
-    if (ids.length === 0 ) {
-        return []
-    }
+  if (ids.length === 0) {
+    return [];
+  }
   const documents = await firestore
-    .collection("items")
+    .collection("companies")
     .where(firebase.firestore.FieldPath.documentId(), "in", ids)
     .get();
 
@@ -105,12 +228,25 @@ export const getCompaniesById = async (ids: string[]): Promise<Company[]> => {
     companies.push({
       id: doc.id,
       name: companyData.name,
+      address: companyData.address,
+      zipcode: companyData.zipcode,
+      city: companyData.city,
+      state: companyData.state,
+      latitude: companyData.coordinates.latitude,
+      longitude: companyData.coordinates.longitude,
+      phoneNumber: companyData.phoneNumber,
+      website: companyData.website,
+      pickup: companyData.pickup,
+      delivery: companyData.delivery,
+      socialMedia: {
+        facebook: companyData.socialMedia.facebook,
+        instagram: companyData.socialMedia.instagram,
+      },
       coordinates: {
         lat: companyData.coordinates.latitude,
         lng: companyData.coordinates.longitude,
       },
     });
-    console.log(doc.data());
   });
   return companies;
 };
