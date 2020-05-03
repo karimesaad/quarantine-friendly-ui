@@ -47,53 +47,7 @@ const geocollection: GeoCollectionReference = geofirestore.collection(
 //   coordinates: new firebase.firestore.GeoPoint(44.97592, -93.27223),
 // });
 
-interface AddCompanyProps {
-  name: string;
-  address: string;
-  zipcode: string;
-  city: string;
-  state: string;
-  latitude: number;
-  longitude: number;
-  phoneNumber: string;
-  website: string;
-  pickup: boolean;
-  delivery: boolean;
-  socialMedia: {
-    facebook: string;
-    instagram: string;
-  };
-  // hours: {
-  //   monday: {
-  //     startHour: string;
-  //     endHour: string;
-  //   };
-  //   tuesday: {
-  //     startHour: string;
-  //     endHour: string;
-  //   };
-  //   wednesday: {
-  //     startHour: string;
-  //     endHour: string;
-  //   };
-  //   thursday: {
-  //     startHour: string;
-  //     endHour: string;
-  //   };
-  //   friday: {
-  //     startHour: string;
-  //     endHour: string;
-  //   };
-  //   saturday: {
-  //     startHour: string;
-  //     endHour: string;
-  //   };
-  //   sunday: {
-  //     startHour: string;
-  //     endHour: string;
-  //   };
-  // };
-}
+interface AddCompanyProps extends Omit<Company, "coordinates" | "id"> {}
 
 export const addCompany = (props: AddCompanyProps) => {
   geocollection.add({
@@ -110,36 +64,36 @@ export const addCompany = (props: AddCompanyProps) => {
       facebook: props.socialMedia.facebook,
       instagram: props.socialMedia.instagram,
     },
-    // hours: {
-    //   monday: {
-    //     startHour: props.hours.monday.startHour,
-    //     endHour: props.hours.monday.endHour,
-    //   },
-    //   tuesday: {
-    //     startHour: props.hours.tuesday.startHour,
-    //     endHour: props.hours.tuesday.endHour,
-    //   },
-    //   wednesday: {
-    //     startHour: props.hours.wednesday.startHour,
-    //     endHour: props.hours.wednesday.endHour,
-    //   },
-    //   thursday: {
-    //     startHour: props.hours.thursday.startHour,
-    //     endHour: props.hours.thursday.endHour,
-    //   },
-    //   friday: {
-    //     startHour: props.hours.friday.startHour,
-    //     endHour: props.hours.friday.endHour,
-    //   },
-    //   saturday: {
-    //     startHour: props.hours.saturday.startHour,
-    //     endHour: props.hours.saturday.endHour,
-    //   },
-    //   sunday: {
-    //     startHour: props.hours.sunday.startHour,
-    //     endHour: props.hours.sunday.endHour,
-    //   },
-    // },
+    hours: {
+      monday: {
+        startTime: props.hours.monday.startTime,
+        endTime: props.hours.monday.endTime,
+      },
+      tuesday: {
+        startTime: props.hours.tuesday.startTime,
+        endTime: props.hours.tuesday.endTime,
+      },
+      wednesday: {
+        startTime: props.hours.wednesday.startTime,
+        endTime: props.hours.wednesday.endTime,
+      },
+      thursday: {
+        startTime: props.hours.thursday.startTime,
+        endTime: props.hours.thursday.endTime,
+      },
+      friday: {
+        startTime: props.hours.friday.startTime,
+        endTime: props.hours.friday.endTime,
+      },
+      saturday: {
+        startTime: props.hours.saturday.startTime,
+        endTime: props.hours.saturday.endTime,
+      },
+      sunday: {
+        startTime: props.hours.sunday.startTime,
+        endTime: props.hours.sunday.endTime,
+      },
+    },
     coordinates: new firebase.firestore.GeoPoint(
       props.latitude,
       props.longitude
@@ -169,6 +123,36 @@ export interface Company {
     facebook: string;
     instagram: string;
   };
+  hours: {
+    monday: {
+      startTime: Date | null;
+      endTime: Date | null;
+    };
+    tuesday: {
+      startTime: Date | null;
+      endTime: Date | null;
+    };
+    wednesday: {
+      startTime: Date | null;
+      endTime: Date | null;
+    };
+    thursday: {
+      startTime: Date | null;
+      endTime: Date | null;
+    };
+    friday: {
+      startTime: Date | null;
+      endTime: Date | null;
+    };
+    saturday: {
+      startTime: Date | null;
+      endTime: Date | null;
+    };
+    sunday: {
+      startTime: Date | null;
+      endTime: Date | null;
+    };
+  };
   coordinates: Coordinates;
 }
 
@@ -190,7 +174,8 @@ export const getCompanyDistances = async (
 
   const companyDistanceMap: Record<string, number> = {};
   response.docs.forEach((doc) => {
-    companyDistanceMap[doc.id] = Number(convertKmToMi(doc.distance).toFixed(3));
+    console.log(doc);
+    companyDistanceMap[doc.id] = Number(convertKmToMi(doc.distance).toFixed(2));
   });
 
   const companies = await getCompaniesById(Object.keys(companyDistanceMap));
@@ -217,14 +202,12 @@ export const getCompaniesById = async (ids: string[]): Promise<Company[]> => {
   if (ids.length === 0) {
     return [];
   }
-  const documents = await firestore
-    .collection("companies")
-    .where(firebase.firestore.FieldPath.documentId(), "in", ids)
-    .get();
+  const documents = await queryCollectionByIds("companies", ids);
 
   const companies: Company[] = [];
   documents.forEach((doc) => {
     const companyData = doc.data().d;
+    console.log(companyData);
     companies.push({
       id: doc.id,
       name: companyData.name,
@@ -242,6 +225,64 @@ export const getCompaniesById = async (ids: string[]): Promise<Company[]> => {
         facebook: companyData.socialMedia.facebook,
         instagram: companyData.socialMedia.instagram,
       },
+      hours: {
+        monday: {
+          startTime: companyData.hours.monday.startTime
+            ? new Date(companyData.hours.monday.startTime.seconds * 1000)
+            : null,
+          endTime: companyData.hours.monday.endTime
+            ? new Date(companyData.hours.monday.endTime.seconds * 1000)
+            : null,
+        },
+        tuesday: {
+          startTime: companyData.hours.tuesday.startTime
+            ? new Date(companyData.hours.tuesday.startTime.seconds * 1000)
+            : null,
+          endTime: companyData.hours.tuesday.endTime
+            ? new Date(companyData.hours.tuesday.endTime.seconds * 1000)
+            : null,
+        },
+        wednesday: {
+          startTime: companyData.hours.wednesday.startTime
+            ? new Date(companyData.hours.wednesday.startTime.seconds * 1000)
+            : null,
+          endTime: companyData.hours.wednesday.endTime
+            ? new Date(companyData.hours.wednesday.startTime.seconds * 1000)
+            : null,
+        },
+        thursday: {
+          startTime: companyData.hours.thursday.startTime
+            ? new Date(companyData.hours.thursday.startTime.seconds * 1000)
+            : null,
+          endTime: companyData.hours.thursday.endTime
+            ? new Date(companyData.hours.thursday.endTime.seconds * 1000)
+            : null,
+        },
+        friday: {
+          startTime: companyData.hours.friday.startTime
+            ? new Date(companyData.hours.friday.startTime.seconds * 1000)
+            : null,
+          endTime: companyData.hours.friday.endTime
+            ? new Date(companyData.hours.friday.endTime.seconds * 1000)
+            : null,
+        },
+        saturday: {
+          startTime: companyData.hours.saturday.startTime
+            ? new Date(companyData.hours.saturday.startTime.seconds * 1000)
+            : null,
+          endTime: companyData.hours.saturday.endTime
+            ? new Date(companyData.hours.saturday.endTime.seconds * 1000)
+            : null,
+        },
+        sunday: {
+          startTime: companyData.hours.sunday.startTime
+            ? new Date(companyData.hours.sunday.startTime.seconds * 1000)
+            : null,
+          endTime: companyData.hours.sunday.endTime
+            ? new Date(companyData.hours.sunday.endTime.seconds * 1000)
+            : null,
+        },
+      },
       coordinates: {
         lat: companyData.coordinates.latitude,
         lng: companyData.coordinates.longitude,
@@ -249,4 +290,31 @@ export const getCompaniesById = async (ids: string[]): Promise<Company[]> => {
     });
   });
   return companies;
+};
+
+var chunks = function <T extends any[]>(array: T, size: number) {
+  var results = [];
+  while (array.length) {
+    results.push(array.splice(0, size));
+  }
+  return results;
+};
+
+const queryCollectionByIds = async (
+  name: string,
+  ids: string[]
+): Promise<firebase.firestore.DocumentData[]> => {
+  const documentChunks = chunks(ids, 10);
+  console.log(documentChunks);
+  const promises = documentChunks.map((chunk) =>
+    firestore
+      .collection("companies")
+      .where(firebase.firestore.FieldPath.documentId(), "in", chunk)
+      .get()
+  );
+  let documents: firebase.firestore.DocumentData[] = [];
+  for (const promise of promises) {
+    documents = [...documents, ...(await promise).docs];
+  }
+  return documents;
 };

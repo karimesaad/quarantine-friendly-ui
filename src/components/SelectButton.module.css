@@ -1,0 +1,11 @@
+.root {
+  border-radius: 30px;
+  border-width: 2px;
+  border-color: var(--icon-active);
+  color: var(--icon-active);
+}
+
+.selected {
+  background: var(--icon-active);
+  color: white;
+}

@@ -4,10 +4,18 @@ interface Filters {
   pickup: boolean;
   delivery: boolean;
   openNow: boolean;
+  search: string;
 }
 
 const useFilters = (defaultValue: Filters) => {
   const [filters, setFilters] = useState<Filters>(defaultValue);
+
+  const setSearch = (search: string) => {
+    setFilters((prev: Filters) => ({
+      ...prev,
+      search: search,
+    }));
+  };
 
   const togglePickup = () => {
     setFilters((prev: Filters) => ({
@@ -22,10 +30,11 @@ const useFilters = (defaultValue: Filters) => {
     }));
   };
   const toggleOpenNow = () => {
-      setFilters((prev: Filters) => ({
-    ...prev,
-    pickup: !prev.openNow,
-  }))};
+    setFilters((prev: Filters) => ({
+      ...prev,
+      pickup: !prev.openNow,
+    }));
+  };
 
   return {
     togglePickup,

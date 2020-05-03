@@ -1,13 +1,47 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: Kollektif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+  font-family: Kollektif;
+  src: url(/fonts/kollektif/Kollektif.ttf);
+}
+
+@font-face {
+  font-family: Kollektif-Bold;
+  src: url(/fonts/kollektif/Kollektif-Bold.ttf);
+}
+
+@font-face {
+  font-family: OpenSans-Regular;
+  src: url(/fonts/opensans/OpenSans-Regular.ttf);
+}
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+:root {
+  --icon-active: #9039a1;
+  --icon-inactive: #d3e3fc;
+  --background-active: #d3e3fc;
+  --background-default: white;
+  --background-hover: rgba(0, 0, 0, 0.05);
+}
+
+.title {
+  font-family: Kollektif-Bold;
+  font-size: 0.9rem;
+  line-height: 1.4rem;
+}
+
+.subtitle {
+  font-family: OpenSans-Regular;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 1.1rem;
 }

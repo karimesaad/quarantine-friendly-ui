@@ -1,11 +1,17 @@
 .root {
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: 52px auto;
+  grid-template-rows: auto auto;
+  height: 100%;
 }
 
-.filters {
+.filtersContainer {
   display: grid;
-  grid-template-columns: auto 52px 52px 52px;
-  grid-template-rows: auto;
+  grid-template-columns: auto;
+  grid-template-rows: 48px auto;
+  color: var(--icon-active) !important;
+}
+
+.data {
+  overflow: auto;
 }

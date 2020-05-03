@@ -17,6 +17,11 @@ import CompanyListingPage from "./pages/CompanyListingPage";
 import LandingPage from "./pages/LandingPage";
 import { stringify } from "querystring";
 import AddCompanyPage from "./pages/AddCompanyPage";
+import { createTheme } from "baseui";
+const primitives = {
+  primaryFontFamily: "Kollektif",
+};
+const theme = createTheme(primitives);
 
 const engine = new Styletron();
 
@@ -44,15 +49,15 @@ function App() {
   return (
     <div className="App">
       <StyletronProvider value={engine}>
-        <BaseProvider theme={LightTheme}>
-          {/* {shouldShowLandingPage && <LandingPage onSubmit={handleSubmit} />}
+        <BaseProvider theme={theme}>
+          {shouldShowLandingPage && <LandingPage onSubmit={handleSubmit} />}
           {!shouldShowLandingPage && (
             <CompanyListingPage
               zipcode={zipcode as string}
               radius={radius as number}
             />
-          )} */}
-          <AddCompanyPage />
+          )}
+          {/* <AddCompanyPage /> */}
         </BaseProvider>
       </StyletronProvider>
     </div>

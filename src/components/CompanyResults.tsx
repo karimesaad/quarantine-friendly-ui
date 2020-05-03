@@ -1,63 +1,113 @@
-import React, { FC, useState } from "react";
+import React, { FC, useRef, useLayoutEffect } from "react";
 import { CompanyDistance } from "../api/firebase";
 import styles from "./CompanyResults.module.css";
 import CompanyDetail from "./CompanyDetail";
-import { Input } from "baseui/input";
-import { useFilters } from "../hooks";
-import LocalMall from "@material-ui/icons/LocalMall";
-import DirectionsCar from "@material-ui/icons/DirectionsCar";
-import MeetingRoom from "@material-ui/icons/MeetingRoom";
-import { Button } from "baseui/button";
-import { StringParam, useQueryParam } from "use-query-params";
-
+import Input from "./Input";
+import { Filters } from "../types";
+import SelectButton from "./SelectButton";
 
 interface CompanyResultsProps {
   companyDistances: CompanyDistance[];
   zipcode: string;
   radius: number;
   isLoading: boolean;
-}
-
-interface Filters {
-  pickup: boolean;
-  delivery: boolean;
-  openNow: boolean;
+  selected: string | null | undefined;
+  onSelect: (id: string) => void;
+  filters: Filters;
+  onFilterChange: (partialFilters: Partial<Filters>) => void;
 }
 
 const CompanyResults: FC<CompanyResultsProps> = (props) => {
-  const [companyId, setCompanyId] = useQueryParam("companyId", StringParam);
-  const [searchValue, setSearchValue] = useState<string>("");
-  const { togglePickup, toggleDelivery, toggleOpenNow } = useFilters({
-    pickup: false,
-    delivery: false,
-    openNow: false,
-  });
-
   return (
     <div className={styles.root}>
-      <div className={styles.filters}>
+      <div className={styles.filtersContainer}>
         <Input
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.currentTarget.value)}
+          value={props.filters.search}
+          onChange={(e) =>
+            props.onFilterChange({ search: e.currentTarget.value })
+          }
           placeholder="Search ..."
         />
-        <Button onClick={(e) => togglePickup()}>
+        {/* 
+        <Button
+          onClick={(e) =>
+            props.onFilterChange({ pickup: !props.filters.pickup })
+          }
+        >
           <LocalMall />
         </Button>
-        <Button onClick={(e) => toggleDelivery()}>
+        <Button
+          onClick={(e) =>
+            props.onFilterChange({ delivery: !props.filters.delivery })
+          }
+        >
           <DirectionsCar />
         </Button>
-        <Button onClick={(e) => toggleOpenNow()}>
+        <Button
+          onClick={(e) =>
+            props.onFilterChange({ openNow: !props.filters.openNow })
+          }
+        >
           <MeetingRoom />
-        </Button>
+        </Button> */}
+        <div className={styles.filters}>
+          <SelectButton
+            onClick={(e) =>
+              props.onFilterChange({ pickup: !props.filters.pickup })
+            }
+            selected={props.filters.pickup}
+          >
+            takeout
+          </SelectButton>
+          <SelectButton
+            onClick={(e) =>
+              props.onFilterChange({ delivery: !props.filters.delivery })
+            }
+            selected={props.filters.delivery}
+          >
+            delivery
+          </SelectButton>
+          <SelectButton
+            onClick={(e) =>
+              props.onFilterChange({ openNow: !props.filters.openNow })
+            }
+            selected={props.filters.openNow}
+          >
+            open now
+          </SelectButton>
+        </div>
       </div>
-      <div>
+      <div className={styles.data}>
         {props.companyDistances.map((companyDistance) => (
-          <CompanyDetail {...companyDistance} expanded={companyId === companyDistance.company.id} />
+          <ScrollIntoView
+            active={props.selected === companyDistance.company.id}
+          >
+            <CompanyDetail
+              {...companyDistance}
+              selected={props.selected === companyDistance.company.id}
+              onClick={() => props.onSelect(companyDistance.company.id)}
+            />
+          </ScrollIntoView>
         ))}
       </div>
     </div>
   );
+};
+
+const ScrollIntoView: FC<{ active: boolean }> = ({ children, active }) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (active) {
+      ref.current?.scrollIntoView({
+        block: "start",
+        inline: "nearest",
+        behavior: "smooth",
+      });
+    }
+  }, [active]);
+
+  return <div ref={ref}>{children}</div>;
 };
 
 export default CompanyResults;

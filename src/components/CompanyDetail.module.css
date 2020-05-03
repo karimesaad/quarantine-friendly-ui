@@ -3,6 +3,27 @@
   padding: 12px;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto;
+  column-gap: 16px;
+}
+
+.name {
+  composes: title from global;
+}
+
+.address {
+  composes: subtitle from global;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.distance {
+  composes: subtitle from global;
+}
+
+.today {
+  composes: subtitle from global;
 }
 
 .left {
@@ -17,9 +38,18 @@
 .icons {
   align-content: start;
   justify-content: end;
+  color: var(--icon-active);
 }
 
 .today {
   display: grid;
   align-items: end;
+}
+
+.selected {
+  background-color: rgba(0, 30, 50, 0.05);
+}
+
+.root:hover {
+  background-color: var(--background-hover);
 }

@@ -43,20 +43,30 @@ interface MapProps {
     type?: string;
     coordinates: Coordinates;
   }>;
-  selected?: string;
+  selected?: string | null | undefined;
   onSelect?: (id: string) => void;
   icons?: Record<string, string>;
 }
 
-const FeatureMap: FC<MapProps> = ({ center, options, onSelect }) => {
+const FeatureMap: FC<MapProps> = ({
+  center: defaultCenter,
+  options,
+  onSelect,
+  selected,
+}) => {
+  const selectedOption = options.find((option) => option.id === selected);
+  let center = [defaultCenter.lng, defaultCenter.lat] as [number, number];
+  if (selectedOption) {
+    center = [selectedOption.coordinates.lng, selectedOption.coordinates.lat];
+  }
   return (
     <Map
-      style="mapbox://styles/karimesm94/ck9frc4x81eiz1ipc9j65lz5f"
+      style="mapbox://styles/karimesm94/ck9qod6wy03ff1ioea0vo5q7s"
       containerStyle={{
         height: "100%",
         width: "100%",
       }}
-      center={[center.lng, center.lat]}
+      center={center} //TODO: maybe use useMemo? or change the center to whatever lat, long is for the object in Feature
     >
       <Layer
         type="symbol"
