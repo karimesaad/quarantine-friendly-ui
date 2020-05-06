@@ -1,0 +1,5 @@
+.root {
+ composes: children-center from global;
+ composes: overlay from global;
+}
+

@@ -1,7 +1,7 @@
 .root {
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: auto auto;
+  grid-template-rows: auto 1fr;
   height: 100%;
 }
 
@@ -9,9 +9,22 @@
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: 48px auto;
-  color: var(--icon-active) !important;
+  composes: shadow-bottom-sm from global;
+}
+
+.filters {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: auto 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  column-gap: 12px;
+}
+
+.filterByLabel {
+  composes: title from global;
 }
 
 .data {
   overflow: auto;
+  position: relative;
 }
