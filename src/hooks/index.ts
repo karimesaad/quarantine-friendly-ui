@@ -1,3 +1,4 @@
 import useFilters from "./useFilters";
+import useAsync from './useAsync'
 
-export { useFilters };
+export { useFilters, useAsync };

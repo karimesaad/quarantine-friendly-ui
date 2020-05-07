@@ -1,5 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import FeatureMap from "../components/FeatureMap";
+import Spinner from '../components/Spinner'
 import { CompanyDistance } from "../api/firebase";
 import * as api from "../api";
 import { Coordinates, Filters } from "../types";
@@ -7,6 +8,7 @@ import styles from "./CompanyListingPage.module.css";
 import CompanyResults from "../components/CompanyResults";
 import { StringParam, useQueryParam } from "use-query-params";
 import useStateObject from "../hooks/useStateObject";
+import { useAsync } from '../hooks'
 import {dayOfWeekAsString} from "../utils";
 
 interface CompanyListingPageProps {
@@ -16,10 +18,10 @@ interface CompanyListingPageProps {
 
 export const CompanyListingPage: FC<CompanyListingPageProps> = (props) => {
   const [companyId, setCompanyId] = useQueryParam("companyId", StringParam);
-  const [userCoordinates, setUserCoordinates] = useState<Coordinates>();
-  const [companyDistances, setCompanyDistances] = useState<CompanyDistance[]>(
-    []
-  );
+  // const [userCoordinates, setUserCoordinates] = useState<Coordinates>();
+  // const [companyDistances, setCompanyDistances] = useState<CompanyDistance[]>(
+  //   []
+  // );
   const [filters, setFilters] = useStateObject<Filters>({
     pickup: false,
     delivery: false,
@@ -33,15 +35,21 @@ export const CompanyListingPage: FC<CompanyListingPageProps> = (props) => {
       coordinates,
       props.radius
     );
-    setUserCoordinates(coordinates);
-    setCompanyDistances(companyDistances);
+    return {
+      userCoordinates: coordinates,
+      companyDistances
+    }
   };
 
+  const {execute, data, error, isPending, isFulfilled, isRejected, isInitial} = useAsync(fetchData)
+
   useEffect(() => {
-    fetchData();
+    execute();
   }, []);
 
-  const filteredCompaniesList = filterCompanies(companyDistances, filters);
+  const filteredCompaniesList = filterCompanies(data?.companyDistances ?? [], filters);
+
+  const isLoading = isPending || isInitial
 
   return (
     <div className={styles.page}>
@@ -50,7 +58,7 @@ export const CompanyListingPage: FC<CompanyListingPageProps> = (props) => {
           companyDistances={filteredCompaniesList}
           zipcode={props.zipcode}
           radius={props.radius}
-          isLoading={false}
+          isLoading={isLoading}
           selected={companyId}
           onSelect={(companyId) => setCompanyId(companyId)}
           filters={filters}
@@ -58,9 +66,12 @@ export const CompanyListingPage: FC<CompanyListingPageProps> = (props) => {
         />
       </div>
       <div className={styles.resultsMap}>
-        {userCoordinates && (
+        {isLoading && (
+          <Spinner />
+        )}
+        {data?.userCoordinates && (
           <FeatureMap
-            center={userCoordinates}
+            center={data.userCoordinates}
             options={filteredCompaniesList.map((cd) => ({
               id: cd.company.id,
               coordinates: cd.company.coordinates,

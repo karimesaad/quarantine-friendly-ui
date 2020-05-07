@@ -3,6 +3,7 @@
   border-width: 2px;
   border-color: var(--icon-active);
   color: var(--icon-active);
+  cursor: pointer;
 }
 
 .selected {

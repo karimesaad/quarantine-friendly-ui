@@ -1,10 +1,12 @@
 import React, { FC, useRef, useLayoutEffect } from "react";
 import { CompanyDistance } from "../api/firebase";
+import Spinner from '../components/Spinner'
 import styles from "./CompanyResults.module.css";
 import CompanyDetail from "./CompanyDetail";
-import Input from "./Input";
+import { Input } from "baseui/input";
 import { Filters } from "../types";
 import SelectButton from "./SelectButton";
+import NoData from './NoData'
 
 interface CompanyResultsProps {
   companyDistances: CompanyDistance[];
@@ -28,29 +30,8 @@ const CompanyResults: FC<CompanyResultsProps> = (props) => {
           }
           placeholder="Search ..."
         />
-        {/* 
-        <Button
-          onClick={(e) =>
-            props.onFilterChange({ pickup: !props.filters.pickup })
-          }
-        >
-          <LocalMall />
-        </Button>
-        <Button
-          onClick={(e) =>
-            props.onFilterChange({ delivery: !props.filters.delivery })
-          }
-        >
-          <DirectionsCar />
-        </Button>
-        <Button
-          onClick={(e) =>
-            props.onFilterChange({ openNow: !props.filters.openNow })
-          }
-        >
-          <MeetingRoom />
-        </Button> */}
         <div className={styles.filters}>
+          <div className={styles.filterByLabel}>Filter By:</div>
           <SelectButton
             onClick={(e) =>
               props.onFilterChange({ pickup: !props.filters.pickup })
@@ -78,6 +59,12 @@ const CompanyResults: FC<CompanyResultsProps> = (props) => {
         </div>
       </div>
       <div className={styles.data}>
+        {props.isLoading && (
+          <Spinner />
+        )}
+        {!props.isLoading && props.companyDistances.length === 0 && (
+          <NoData message="No results"/>
+        )}
         {props.companyDistances.map((companyDistance) => (
           <ScrollIntoView
             active={props.selected === companyDistance.company.id}
