@@ -2,6 +2,8 @@ import React, { FC, useState } from "react";
 import { Select, Option } from "baseui/select";
 import { Input } from "baseui/input";
 import { Button } from "baseui/button";
+import styles from "./LandingPage.module.css";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 interface LandingPageProps {
   onSubmit: (obj: { zipcode: string; radius: number }) => void;
@@ -26,23 +28,17 @@ const LandingPage: FC<LandingPageProps> = ({ onSubmit }) => {
   const [radiusOption, setRadiusOption] = useState<Option>();
 
   return (
-    <div
-      style={{
-        height: "100vh",
-        width: "100vw",
-        display: "grid",
-        placeItems: "center",
-      }}
-    >
-      <div style={{ width: "75%", maxWidth: 400 }}>
-        <div style={{ padding: "12px 0" }}>
+    <div className={styles.root}>
+      <div className={styles.title}> Quarantine Friendly </div>
+      <div className={styles.itemContainer}>
+        <div className={styles.item}>
           <Input
             value={zipcode}
             onChange={(e) => setZipcode(e.currentTarget.value)}
             placeholder="Zipcode"
           />
         </div>
-        <div style={{ padding: "12px 0" }}>
+        <div className={styles.item}>
           <Select
             options={radiusOptions}
             value={radiusOption !== undefined ? [radiusOption] : []}
@@ -50,7 +46,7 @@ const LandingPage: FC<LandingPageProps> = ({ onSubmit }) => {
             onChange={(e) => setRadiusOption(e.option as Option)}
           />
         </div>
-        <div style={{ padding: "12px 0" }}>
+        <div className={styles.item}>
           <Button
             disabled={zipcode.length < 5 || radiusOption === undefined}
             onClick={(e) =>
@@ -60,7 +56,7 @@ const LandingPage: FC<LandingPageProps> = ({ onSubmit }) => {
               })
             }
           >
-            <span>---></span>
+            <ArrowForwardIosIcon />
           </Button>
         </div>
       </div>

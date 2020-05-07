@@ -1,0 +1,36 @@
+.root {
+  background-image: url("/background.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  place-items: center;
+}
+
+.title {
+  font-family: Kollektif-Bold;
+  font-size: 5rem;
+  color: white;
+}
+
+.itemContainer {
+  width: 50%;
+  max-width: 300px;
+}
+
+.item {
+  padding: 12px 0;
+  justify-self: center;
+}
+
+@media only screen and (max-width: 900px) {
+  .title {
+    font-family: Kollektif-Bold;
+    font-size: 3.5rem;
+    color: white;
+    text-align: center;
+  }
+}

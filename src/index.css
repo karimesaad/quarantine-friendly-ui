@@ -24,6 +24,11 @@ body {
   src: url(/fonts/opensans/OpenSans-Regular.ttf);
 }
 
+@font-face {
+  font-family: OpenSans-Bold;
+  src: url(/fonts/opensans/OpenSans-Bold.ttf);
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
@@ -46,6 +51,13 @@ code {
 
 .subtitle {
   font-family: OpenSans-Regular;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 1.1rem;
+}
+
+.subtitle-bold {
+  font-family: OpenSans-Bold;
   font-size: 0.8rem;
   color: rgba(0, 0, 0, 0.7);
   line-height: 1.1rem;

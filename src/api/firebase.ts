@@ -247,7 +247,7 @@ export const getCompaniesById = async (ids: string[]): Promise<Company[]> => {
             ? new Date(companyData.hours.wednesday.startTime.seconds * 1000)
             : null,
           endTime: companyData.hours.wednesday.endTime
-            ? new Date(companyData.hours.wednesday.startTime.seconds * 1000)
+            ? new Date(companyData.hours.wednesday.endTime.seconds * 1000)
             : null,
         },
         thursday: {
