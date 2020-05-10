@@ -9,6 +9,7 @@
   display: grid;
   grid-template-rows: auto 1fr 1fr;
   place-items: center;
+  overflow: auto;
 }
 
 .content {
@@ -33,11 +34,17 @@
 }
 
 .description {
-  width: 60%;
+  width: 65%;
   font-size: 1.3rem;
   color: var(--text-medium-dark);
   text-align: center;
-  padding-bottom: 30px;
+  padding-bottom: 10px;
+  line-height: 2.5rem;
+}
+
+.aboutLink {
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .contactUs {
@@ -53,20 +60,17 @@
 
 .item {
   padding: 12px 0;
-  justify-self: center;
 }
 
-@media only screen and (max-width: 900px) {
-  .title {
-    font-size: 3.5rem;
-    text-align: center;
-  }
-
-  .description {
-    font-size: 1rem;
-  }
+.input {
+  composes: item;
 }
 
+.button {
+  composes: item;
+  display: flex;
+  justify-content: flex-end;
+}
 .videoContainer {
   position: fixed;
   top: 0;
@@ -81,4 +85,30 @@
   width: 120%;
   left: -10%;
   top: -20%;
+}
+
+.about {
+  width: 50%;
+  font-size: 1.1rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 8px 12px;
+  margin: 24px;
+  color: var(--text-medium-dark);
+  line-height: 2rem;
+}
+
+@media only screen and (max-width: 900px) {
+  .title {
+    font-size: 3.6rem;
+    text-align: center;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .about {
+    width: 65%;
+  }
 }
