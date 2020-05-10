@@ -9,7 +9,7 @@
 
 .resultsContainer {
   position: relative;
-  z-index: 1;
+  z-index: 10000000;
   grid-area: resultsContainer;
   height: 100vh;
   composes: shadow-right-md from global;
@@ -18,7 +18,8 @@
 .resultsMap {
   position: relative;
   grid-area: resultsMap;
-  background: #F0F4FA;
+  background: #f0f4fa;
+  overflow: hidden;
 }
 
 @media only screen and (max-width: 700px) {
@@ -28,7 +29,7 @@
     grid-template-areas:
       "resultsMap"
       "resultsContainer";
-    grid-template-rows: 300px 1fr;
+    grid-template-rows: 380px 1fr;
     grid-template-columns: 1fr;
   }
 
@@ -37,4 +38,8 @@
     overflow: auto;
     height: auto;
   }
+}
+
+.hidden {
+  visibility: hidden;
 }

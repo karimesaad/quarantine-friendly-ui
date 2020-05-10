@@ -1,9 +1,16 @@
 .root {
   display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto;
+}
+
+.header {
+  display: grid;
   padding: 12px;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto;
   column-gap: 16px;
+  composes: shadow-bottom-sm from global;
 }
 
 .name {
@@ -36,8 +43,10 @@
 }
 
 .icons {
-  align-content: start;
-  justify-content: end;
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: start;
+  justify-items: end;
   color: var(--icon-active);
 }
 
@@ -52,4 +61,44 @@
 
 .root:hover {
   background-color: var(--background-hover);
+}
+
+.details {
+  display: grid;
+  padding: 12px;
+  grid-template-columns: 1fr 1fr;
+  background-color: #ffffff94;
+}
+
+.social {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: auto;
+}
+
+.website {
+  color: var(--icon-active);
+  text-decoration: none;
+  composes: subtitle-bold from global;
+}
+
+.socialBtn {
+  color: var(--icon-active);
+  padding-right: 5px;
+}
+
+.days {
+  justify-self: right;
+}
+
+.hours {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  composes: subtitle from global;
+  justify-items: right;
+  column-gap: 10px;
+}
+
+.bold {
+  composes: subtitle-bold from global;
 }

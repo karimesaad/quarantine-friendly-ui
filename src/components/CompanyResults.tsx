@@ -1,12 +1,12 @@
 import React, { FC, useRef, useLayoutEffect } from "react";
 import { CompanyDistance } from "../api/firebase";
-import Spinner from '../components/Spinner'
+import Spinner from "../components/Spinner";
 import styles from "./CompanyResults.module.css";
 import CompanyDetail from "./CompanyDetail";
 import { Input } from "baseui/input";
 import { Filters } from "../types";
 import SelectButton from "./SelectButton";
-import NoData from './NoData'
+import NoData from "./NoData";
 
 interface CompanyResultsProps {
   companyDistances: CompanyDistance[];
@@ -59,11 +59,9 @@ const CompanyResults: FC<CompanyResultsProps> = (props) => {
         </div>
       </div>
       <div className={styles.data}>
-        {props.isLoading && (
-          <Spinner />
-        )}
+        {props.isLoading && <Spinner />}
         {!props.isLoading && props.companyDistances.length === 0 && (
-          <NoData message="No results"/>
+          <NoData message="No results" />
         )}
         {props.companyDistances.map((companyDistance) => (
           <ScrollIntoView
