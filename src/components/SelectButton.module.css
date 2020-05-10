@@ -4,9 +4,11 @@
   border-color: var(--icon-active);
   color: var(--icon-active);
   cursor: pointer;
+  border-style: solid;
+  background-color: transparent;
 }
 
 .selected {
-  background: var(--icon-active);
+  background-color: var(--icon-active);
   color: white;
 }

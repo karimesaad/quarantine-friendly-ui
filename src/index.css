@@ -9,6 +9,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+  color: var(--icon-active);
+  text-decoration: unset;
+}
+
 @font-face {
   font-family: Kollektif;
   src: url(/fonts/kollektif/Kollektif.ttf);
@@ -35,12 +40,14 @@ code {
 }
 
 :root {
-  --icon-active: #8350e3;
+  --icon-active: #5daaa7;
   --icon-inactive: #d3e3fc;
   --background-active: #d3e3fc;
   --background-default: white;
   --background-hover: rgba(0, 0, 0, 0.05);
   --shadow-color: rgba(0, 0, 0, 0.08);
+  --text-dark: rgba(0, 0, 0, 0.8);
+  --text-medium-dark: rgba(0, 0, 0, 0.6);
 }
 
 .title {
@@ -85,4 +92,8 @@ code {
 
 .shadow-right-md {
   box-shadow: 4px 0px 15px 0px var(--shadow-color);
+}
+
+.border-top {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 }

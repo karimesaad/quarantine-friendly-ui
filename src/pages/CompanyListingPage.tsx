@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect } from "react";
 import FeatureMap from "../components/FeatureMap";
-import Spinner from '../components/Spinner'
+import Spinner from "../components/Spinner";
 import { CompanyDistance } from "../api/firebase";
 import * as api from "../api";
 import { Coordinates, Filters } from "../types";
@@ -8,8 +8,8 @@ import styles from "./CompanyListingPage.module.css";
 import CompanyResults from "../components/CompanyResults";
 import { StringParam, useQueryParam } from "use-query-params";
 import useStateObject from "../hooks/useStateObject";
-import { useAsync } from '../hooks'
-import {dayOfWeekAsString} from "../utils";
+import { useAsync } from "../hooks";
+import { dayOfWeekAsString } from "../utils";
 
 interface CompanyListingPageProps {
   zipcode: string;
@@ -18,6 +18,7 @@ interface CompanyListingPageProps {
 
 export const CompanyListingPage: FC<CompanyListingPageProps> = (props) => {
   const [companyId, setCompanyId] = useQueryParam("companyId", StringParam);
+  const [mapLoading, setMapLoading] = useState(true);
   // const [userCoordinates, setUserCoordinates] = useState<Coordinates>();
   // const [companyDistances, setCompanyDistances] = useState<CompanyDistance[]>(
   //   []
@@ -37,19 +38,30 @@ export const CompanyListingPage: FC<CompanyListingPageProps> = (props) => {
     );
     return {
       userCoordinates: coordinates,
-      companyDistances
-    }
+      companyDistances,
+    };
   };
 
-  const {execute, data, error, isPending, isFulfilled, isRejected, isInitial} = useAsync(fetchData)
+  const {
+    execute,
+    data,
+    error,
+    isPending,
+    isFulfilled,
+    isRejected,
+    isInitial,
+  } = useAsync(fetchData);
 
   useEffect(() => {
     execute();
   }, []);
 
-  const filteredCompaniesList = filterCompanies(data?.companyDistances ?? [], filters);
+  const filteredCompaniesList = filterCompanies(
+    data?.companyDistances ?? [],
+    filters
+  );
 
-  const isLoading = isPending || isInitial
+  const isLoading = isPending || isInitial;
 
   return (
     <div className={styles.page}>
@@ -66,11 +78,10 @@ export const CompanyListingPage: FC<CompanyListingPageProps> = (props) => {
         />
       </div>
       <div className={styles.resultsMap}>
-        {isLoading && (
-          <Spinner />
-        )}
+        {(isLoading || mapLoading) && <Spinner />}
         {data?.userCoordinates && (
           <FeatureMap
+            className={mapLoading ? styles.hidden : ""}
             center={data.userCoordinates}
             options={filteredCompaniesList.map((cd) => ({
               id: cd.company.id,
@@ -78,6 +89,7 @@ export const CompanyListingPage: FC<CompanyListingPageProps> = (props) => {
             }))}
             onSelect={(companyId) => setCompanyId(companyId)}
             selected={companyId}
+            onLoad={() => setMapLoading(false)}
           />
         )}
       </div>

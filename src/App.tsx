@@ -18,10 +18,21 @@ import LandingPage from "./pages/LandingPage";
 import { stringify } from "querystring";
 import AddCompanyPage from "./pages/AddCompanyPage";
 import { createTheme } from "baseui";
+import { withTheme } from "@material-ui/core";
 const primitives = {
   primaryFontFamily: "Kollektif",
+  primary: "var(--icon-active)",
+  mono300: "white",
 };
-const theme = createTheme(primitives);
+
+const overrides = {
+  colors: {
+    buttonDisabledFill: "rgba(208, 208, 208, 1)",
+    inputFillActive: "white",
+  },
+};
+const theme = createTheme(primitives, overrides);
+console.log(theme);
 
 const engine = new Styletron();
 

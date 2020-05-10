@@ -9,6 +9,7 @@ const Map = ReactMapboxGl({
 });
 
 interface MapProps {
+  className?: string;
   center: Coordinates;
   options: Array<{
     id: string;
@@ -18,6 +19,7 @@ interface MapProps {
   selected?: string | null | undefined;
   onSelect?: (id: string) => void;
   icons?: Record<string, string>;
+  onLoad: () => void;
 }
 
 const FeatureMap: FC<MapProps> = ({
@@ -25,6 +27,8 @@ const FeatureMap: FC<MapProps> = ({
   options,
   onSelect,
   selected,
+  onLoad,
+  className,
 }) => {
   const selectedOption = options.find((option) => option.id === selected);
   let center = [defaultCenter.lng, defaultCenter.lat] as [number, number];
@@ -33,22 +37,33 @@ const FeatureMap: FC<MapProps> = ({
   }
   return (
     <Map
+      className={className}
       style="mapbox://styles/karimesm94/ck9qod6wy03ff1ioea0vo5q7s"
       containerStyle={{
         height: "100%",
         width: "100%",
       }}
       center={center} //TODO: maybe use useMemo? or change the center to whatever lat, long is for the object in Feature
+      onStyleLoad={onLoad}
     >
-        {options.map((o) => (
-          <Marker
-            key={o.id}
-            onClick={(e) => onSelect?.(o.id)}
-            coordinates={[o.coordinates.lng, o.coordinates.lat]}
-          >
-            <img src={'placeholder.svg'} height={32} width={32} style={{transition: 'transform .5s', transform: selected === o.id ? 'scale(1.5)' : 'scale(1)', cursor: 'pointer'}}/>
-          </Marker>
-        ))}
+      {options.map((o) => (
+        <Marker
+          key={o.id}
+          onClick={(e) => onSelect?.(o.id)}
+          coordinates={[o.coordinates.lng, o.coordinates.lat]}
+        >
+          <img
+            src={"placeholder.svg"}
+            height={32}
+            width={32}
+            style={{
+              transition: "transform .5s",
+              transform: selected === o.id ? "scale(1.5)" : "scale(1)",
+              cursor: "pointer",
+            }}
+          />
+        </Marker>
+      ))}
     </Map>
   );
 };
