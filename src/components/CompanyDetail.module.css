@@ -72,13 +72,17 @@
 
 .social {
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: 1fr 1fr auto;
   grid-template-columns: auto;
 }
 
 .website {
   color: var(--icon-active);
   text-decoration: none;
+  composes: subtitle-bold from global;
+}
+
+.phoneNumber {
   composes: subtitle-bold from global;
 }
 

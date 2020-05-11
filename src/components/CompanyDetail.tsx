@@ -24,6 +24,9 @@ const validateWebsite = (url: string) => {
   return "http://" + url;
 };
 
+const getPhoneLink = (phoneNumber: string) => {
+  return "tel:" + phoneNumber;
+};
 const CompanyDetail: FC<CompanyDetailProps> = (props) => {
   const today = dayOfWeekAsString(new Date().getDay());
   const todayHours = getCompanyHoursForDay(props.company, today);
@@ -72,6 +75,11 @@ const CompanyDetail: FC<CompanyDetailProps> = (props) => {
           <div className={styles.social}>
             <div className={styles.website}>
               <a href={validateWebsite(props.company.website)}>Visit website</a>
+            </div>
+            <div className={styles.phoneNumber}>
+              <a href={getPhoneLink(props.company.phoneNumber)}>
+                {props.company.phoneNumber}
+              </a>
             </div>
             <div>
               <a
