@@ -1,11 +1,10 @@
 import React, { FC, useState } from "react";
 import { Select, Option } from "baseui/select";
-import { Input } from "baseui/input";
+import { MaskedInput } from "baseui/input";
 import { Button } from "baseui/button";
 import styles from "./LandingPage.module.css";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import WordSlides from "../components/WordSlides";
-import { relative } from "path";
 
 interface LandingPageProps {
   onSubmit: (obj: { zipcode: string; radius: number }) => void;
@@ -29,7 +28,7 @@ const radiusMiles: Record<string, number> = {
 
 const words = [
   "latte",
-  "machiatto",
+  "macchiato",
   "cold brew",
   "espresso",
   "americano",
@@ -76,10 +75,11 @@ const LandingPage: FC<LandingPageProps> = ({ onSubmit }) => {
         {!showAbout && (
           <div className={styles.itemContainer}>
             <div className={styles.input}>
-              <Input
+              <MaskedInput
                 value={zipcode}
                 onChange={(e) => setZipcode(e.currentTarget.value)}
                 placeholder="Zipcode"
+                mask="99999"
               />
             </div>
             <div className={styles.input}>
